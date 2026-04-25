@@ -8,7 +8,7 @@
 <style>
 body{
     margin:0;
-    font-family:Arial,sans-serif;
+    font-family:Arial;
     direction:rtl;
     background:#f0f4f8;
     text-align:center;
@@ -32,13 +32,6 @@ header{
     border-radius:15px;
     box-shadow:0 4px 12px rgba(0,0,0,0.15);
     cursor:pointer;
-    transition:0.3s;
-}
-.card:hover{
-    transform:scale(1.05);
-}
-.icon{
-    font-size:45px;
 }
 .section{
     display:none;
@@ -47,180 +40,254 @@ header{
     background:white;
     padding:20px;
     border-radius:15px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
 button{
-    padding:10px 15px;
+    padding:10px;
     margin:5px;
     background:#004080;
     color:white;
     border:none;
     border-radius:8px;
-    cursor:pointer;
-}
-button:hover{
-    background:#0055aa;
 }
 input,select{
-    padding:8px;
-    margin:5px;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:15px;
-}
-table,th,td{
-    border:1px solid #ccc;
-}
-th,td{
-    padding:8px;
+    padding:6px;
 }
 .item-box{
     background:#eef3ff;
-    padding:10px;
     margin:10px;
+    padding:10px;
     border-radius:8px;
+}
+img{
+    max-width:100px;
+    display:block;
+    margin:auto;
 }
 </style>
 </head>
+
 <body>
 
 <header>
-    <h1>موقع قسم 1 علمي 6</h1>
+<h1>موقع قسم 1 علمي 6</h1>
 </header>
 
 <div class="container">
-    <div class="card" onclick="showSection('grades')">
-        <div class="icon">📊</div>
-        <h3>حساب المعدل</h3>
-    </div>
-
-    <div class="card" onclick="showSection('lessons')">
-        <div class="icon">📚</div>
-        <h3>الدروس</h3>
-    </div>
-
-    <div class="card" onclick="showSection('homework')">
-        <div class="icon">📝</div>
-        <h3>الواجبات</h3>
-    </div>
-
-    <div class="card" onclick="showSection('teachers')">
-        <div class="icon">👨‍🏫</div>
-        <h3>الأساتذة</h3>
-    </div>
+<div class="card" onclick="showSection('grades')">📊 حساب المعدل</div>
+<div class="card" onclick="showSection('lessons')">📚 الدروس</div>
+<div class="card" onclick="showSection('homework')">📝 الواجبات</div>
+<div class="card" onclick="showSection('teachers')">👨‍🏫 الأساتذة</div>
 </div>
 
-<!-- حساب المعدل -->
+<!-- المعدل -->
 <div id="grades" class="section">
-    <h2>حساب المعدل الفصلي</h2>
+<h2>حساب المعدل</h2>
 
-    <table>
-        <tr>
-            <th>المادة</th>
-            <th>التقويم</th>
-            <th>الفرض</th>
-            <th>الاختبار /40</th>
-            <th>المعامل</th>
-        </tr>
+<div id="subjects"></div>
 
-        <tr><td>رياضيات</td><td><input id="m1"></td><td><input id="m2"></td><td><input id="m3"></td><td><input id="c1"></td></tr>
-        <tr><td>فيزياء</td><td><input id="p1"></td><td><input id="p2"></td><td><input id="p3"></td><td><input id="c2"></td></tr>
-        <tr><td>علوم</td><td><input id="s1"></td><td><input id="s2"></td><td><input id="s3"></td><td><input id="c3"></td></tr>
-        <tr><td>عربية</td><td><input id="a1"></td><td><input id="a2"></td><td><input id="a3"></td><td><input id="c4"></td></tr>
-    </table>
-
-    <button onclick="calculateGrades()">احسب المعدل</button>
-    <h3 id="gradeResult"></h3>
+<button onclick="calculate()">احسب</button>
+<button onclick="saveGrades()">💾 حفظ</button>
+<h3 id="result"></h3>
 </div>
 
 <!-- الدروس -->
 <div id="lessons" class="section">
-    <h2>الدروس</h2>
-    <button onclick="addLesson()">➕ إضافة درس</button>
-    <button onclick="viewLessons()">📂 الاطلاع</button>
-    <div id="lessonList"></div>
+<h2>الدروس</h2>
+<button onclick="addLesson()">➕ إضافة</button>
+<div id="lessonList"></div>
 </div>
 
 <!-- الواجبات -->
 <div id="homework" class="section">
-    <h2>الواجبات</h2>
-    <button onclick="addHomework()">➕ إضافة واجب</button>
-    <button onclick="viewHomework()">📂 الاطلاع</button>
-    <div id="homeworkList"></div>
+<h2>الواجبات</h2>
+<button onclick="addHomework()">➕ إضافة</button>
+<div id="homeworkList"></div>
 </div>
 
 <!-- الأساتذة -->
 <div id="teachers" class="section">
-    <h2>الأساتذة</h2>
-    <button onclick="addTeacher()">➕ إضافة أستاذ</button>
-    <button onclick="viewTeachers()">📂 الاطلاع</button>
-    <div id="teacherList"></div>
+<h2>الأساتذة</h2>
+<button onclick="addTeacher()">➕ إضافة</button>
+<div id="teacherList"></div>
 </div>
 
 <script>
+
+const subjects = [
+"الرياضيات","الفيزياء","العلوم","المعلوماتية","التكنولوجيا",
+"اللغة العربية","اللغة الفرنسية","اللغة الانجليزية",
+"التربية البدنية","التاريخ والجغرافيا","التربية الاسلامية"
+];
+
 function showSection(id){
-    document.querySelectorAll('.section').forEach(sec=>sec.style.display='none');
-    document.getElementById(id).style.display='block';
+document.querySelectorAll('.section').forEach(s=>s.style.display="none");
+document.getElementById(id).style.display="block";
 }
 
-function calculateGrades(){
-    let data = [
-        ['m1','m2','m3','c1'],
-        ['p1','p2','p3','c2'],
-        ['s1','s2','s3','c3'],
-        ['a1','a2','a3','c4']
-    ];
+/* ---------- المعدل ---------- */
 
-    let total = 0;
-    let coefTotal = 0;
-
-    data.forEach(row=>{
-        let continuous = parseFloat(document.getElementById(row[0]).value)||0;
-        let test = parseFloat(document.getElementById(row[1]).value)||0;
-        let exam = (parseFloat(document.getElementById(row[2]).value)||0)/2;
-        let coef = parseFloat(document.getElementById(row[3]).value)||1;
-
-        let subjectAverage = (continuous + test + exam)/3;
-        total += subjectAverage * coef;
-        coefTotal += coef;
-    });
-
-    let semesterAverage = total / coefTotal;
-    document.getElementById("gradeResult").innerHTML = "المعدل الفصلي: " + semesterAverage.toFixed(2);
+function loadSubjects(){
+let html="";
+subjects.forEach((s,i)=>{
+html+=`
+<div>
+<b>${s}</b><br>
+تقويم <input id="c${i}">
+فرض <input id="f${i}">
+اختبار /40 <input id="e${i}">
+معامل <input id="k${i}">
+</div><hr>`;
+});
+document.getElementById("subjects").innerHTML=html;
 }
 
-let lessons = [];
-let homeworks = [];
-let teachers = [];
+function calculate(){
+let total=0,coef=0;
+
+subjects.forEach((s,i)=>{
+let c=+document.getElementById("c"+i).value||0;
+let f=+document.getElementById("f"+i).value||0;
+let e=(+document.getElementById("e"+i).value||0)/2;
+let k=+document.getElementById("k"+i).value||1;
+
+let avg=(c+f+e)/3;
+total+=avg*k;
+coef+=k;
+});
+
+document.getElementById("result").innerText="المعدل: "+(total/coef).toFixed(2);
+}
+
+function saveGrades(){
+let data=[];
+subjects.forEach((s,i)=>{
+data.push({
+c:document.getElementById("c"+i).value,
+f:document.getElementById("f"+i).value,
+e:document.getElementById("e"+i).value,
+k:document.getElementById("k"+i).value
+});
+});
+localStorage.setItem("grades",JSON.stringify(data));
+alert("تم الحفظ");
+}
+
+function loadGrades(){
+let data=JSON.parse(localStorage.getItem("grades")||"[]");
+data.forEach((d,i)=>{
+document.getElementById("c"+i).value=d.c||"";
+document.getElementById("f"+i).value=d.f||"";
+document.getElementById("e"+i).value=d.e||"";
+document.getElementById("k"+i).value=d.k||"";
+});
+}
+
+/* ---------- الدروس + الصور ---------- */
+
+let lessons=JSON.parse(localStorage.getItem("lessons")||"[]");
 
 function addLesson(){
-    let name = prompt("اسم الدرس:");
-    if(name) lessons.push(name);
+let name=prompt("اسم الدرس:");
+let fileInput=document.createElement("input");
+fileInput.type="file";
+
+fileInput.onchange=()=>{
+let reader=new FileReader();
+reader.onload=function(){
+lessons.push({name,img:reader.result});
+localStorage.setItem("lessons",JSON.stringify(lessons));
+viewLessons();
+};
+reader.readAsDataURL(fileInput.files[0]);
+};
+
+fileInput.click();
 }
+
 function viewLessons(){
-    let html = lessons.map(l=>`<div class="item-box">${l}</div>`).join('');
-    document.getElementById("lessonList").innerHTML = html;
+let html=lessons.map(l=>`
+<div class="item-box">
+${l.name}
+<img src="${l.img}">
+</div>`).join("");
+document.getElementById("lessonList").innerHTML=html;
 }
+
+/* ---------- الواجبات ---------- */
+
+let homeworks=JSON.parse(localStorage.getItem("homeworks")||"[]");
 
 function addHomework(){
-    let name = prompt("اسم الواجب:");
-    if(name) homeworks.push(name);
-}
-function viewHomework(){
-    let html = homeworks.map(h=>`<div class="item-box">${h}</div>`).join('');
-    document.getElementById("homeworkList").innerHTML = html;
+let name=prompt("اسم الواجب:");
+let fileInput=document.createElement("input");
+fileInput.type="file";
+
+fileInput.onchange=()=>{
+let reader=new FileReader();
+reader.onload=function(){
+homeworks.push({name,img:reader.result});
+localStorage.setItem("homeworks",JSON.stringify(homeworks));
+viewHomework();
+};
+reader.readAsDataURL(fileInput.files[0]);
+};
+
+fileInput.click();
 }
 
+function viewHomework(){
+let html=homeworks.map(h=>`
+<div class="item-box">
+${h.name}
+<img src="${h.img}">
+</div>`).join("");
+document.getElementById("homeworkList").innerHTML=html;
+}
+
+/* ---------- الأساتذة ---------- */
+
+let teachers=JSON.parse(localStorage.getItem("teachers")||"[]");
+
 function addTeacher(){
-    let name = prompt("اسم الأستاذ:");
-    if(name) teachers.push(name);
+let name=prompt("اسم الأستاذ:");
+let subject=prompt("المادة:");
+
+if(name && subject){
+teachers.push({name,subject});
+localStorage.setItem("teachers",JSON.stringify(teachers));
+viewTeachers();
 }
+}
+
+function editTeacher(i){
+let name=prompt("اسم جديد:",teachers[i].name);
+let subject=prompt("مادة:",teachers[i].subject);
+
+teachers[i]={name,subject};
+localStorage.setItem("teachers",JSON.stringify(teachers));
+viewTeachers();
+}
+
 function viewTeachers(){
-    let html = teachers.map(t=>`<div class="item-box">${t}</div>`).join('');
-    document.getElementById("teacherList").innerHTML = html;
+let html=teachers.map((t,i)=>`
+<div class="item-box">
+${t.name} - ${t.subject}
+<br>
+<button onclick="editTeacher(${i})">✏️ تعديل</button>
+</div>`).join("");
+
+document.getElementById("teacherList").innerHTML=html;
 }
+
+/* ---------- تشغيل ---------- */
+
+loadSubjects();
+setTimeout(loadGrades,100);
+
+viewLessons();
+viewHomework();
+viewTeachers();
+
 </script>
 
 </body>
