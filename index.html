@@ -1,140 +1,225 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>قسم 1 علمي 6</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      direction: rtl;
-      background: #f4f6f9;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قسم 1 علمي 6</title>
 
-    header {
-      background: #004080;
-      color: white;
-      padding: 20px;
-    }
-
-    .container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 30px;
-      gap: 20px;
-    }
-
-    .card {
-      background: white;
-      width: 250px;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-      background: #eef4ff;
-    }
-
-    .icon {
-      font-size: 50px;
-      margin-bottom: 15px;
-    }
-
-    .section {
-      display: none;
-      margin: 20px auto;
-      width: 80%;
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-
-    input {
-      padding: 10px;
-      margin: 10px;
-      width: 120px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #004080;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0059b3;
-    }
-  </style>
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    direction:rtl;
+    background:#f0f4f8;
+    text-align:center;
+}
+header{
+    background:#004080;
+    color:white;
+    padding:20px;
+}
+.container{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:20px;
+    margin:30px;
+}
+.card{
+    width:220px;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    cursor:pointer;
+    transition:0.3s;
+}
+.card:hover{
+    transform:scale(1.05);
+}
+.icon{
+    font-size:45px;
+}
+.section{
+    display:none;
+    width:85%;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+button{
+    padding:10px 15px;
+    margin:5px;
+    background:#004080;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+button:hover{
+    background:#0055aa;
+}
+input,select{
+    padding:8px;
+    margin:5px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+table,th,td{
+    border:1px solid #ccc;
+}
+th,td{
+    padding:8px;
+}
+.item-box{
+    background:#eef3ff;
+    padding:10px;
+    margin:10px;
+    border-radius:8px;
+}
+</style>
 </head>
 <body>
 
 <header>
-  <h1>موقع قسم 1 علمي 6</h1>
-  <p>الدروس والواجبات وحساب المعدل</p>
+    <h1>موقع قسم 1 علمي 6</h1>
 </header>
 
 <div class="container">
-  <div class="card" onclick="showSection('grades')">
-    <div class="icon">📊</div>
-    <h2>حساب المعدل</h2>
-  </div>
+    <div class="card" onclick="showSection('grades')">
+        <div class="icon">📊</div>
+        <h3>حساب المعدل</h3>
+    </div>
 
-  <div class="card" onclick="showSection('lessons')">
-    <div class="icon">📚</div>
-    <h2>الدروس</h2>
-  </div>
+    <div class="card" onclick="showSection('lessons')">
+        <div class="icon">📚</div>
+        <h3>الدروس</h3>
+    </div>
 
-  <div class="card" onclick="showSection('homework')">
-    <div class="icon">📝</div>
-    <h2>الواجبات</h2>
-  </div>
+    <div class="card" onclick="showSection('homework')">
+        <div class="icon">📝</div>
+        <h3>الواجبات</h3>
+    </div>
+
+    <div class="card" onclick="showSection('teachers')">
+        <div class="icon">👨‍🏫</div>
+        <h3>الأساتذة</h3>
+    </div>
 </div>
 
+<!-- حساب المعدل -->
 <div id="grades" class="section">
-  <h2>حساب المعدل</h2>
-  <input type="number" id="mark1" placeholder="العلامة 1">
-  <input type="number" id="mark2" placeholder="العلامة 2">
-  <input type="number" id="mark3" placeholder="العلامة 3">
-  <br>
-  <button onclick="calculateAverage()">احسب المعدل</button>
-  <h3 id="result"></h3>
+    <h2>حساب المعدل الفصلي</h2>
+
+    <table>
+        <tr>
+            <th>المادة</th>
+            <th>التقويم</th>
+            <th>الفرض</th>
+            <th>الاختبار /40</th>
+            <th>المعامل</th>
+        </tr>
+
+        <tr><td>رياضيات</td><td><input id="m1"></td><td><input id="m2"></td><td><input id="m3"></td><td><input id="c1"></td></tr>
+        <tr><td>فيزياء</td><td><input id="p1"></td><td><input id="p2"></td><td><input id="p3"></td><td><input id="c2"></td></tr>
+        <tr><td>علوم</td><td><input id="s1"></td><td><input id="s2"></td><td><input id="s3"></td><td><input id="c3"></td></tr>
+        <tr><td>عربية</td><td><input id="a1"></td><td><input id="a2"></td><td><input id="a3"></td><td><input id="c4"></td></tr>
+    </table>
+
+    <button onclick="calculateGrades()">احسب المعدل</button>
+    <h3 id="gradeResult"></h3>
 </div>
 
+<!-- الدروس -->
 <div id="lessons" class="section">
-  <h2>الدروس</h2>
-  <p>هنا ستضع روابط الدروس أو ملفات PDF الخاصة بالقسم.</p>
+    <h2>الدروس</h2>
+    <button onclick="addLesson()">➕ إضافة درس</button>
+    <button onclick="viewLessons()">📂 الاطلاع</button>
+    <div id="lessonList"></div>
 </div>
 
+<!-- الواجبات -->
 <div id="homework" class="section">
-  <h2>الواجبات</h2>
-  <p>هنا ستضع الواجبات والتمارين المطلوبة من التلاميذ.</p>
+    <h2>الواجبات</h2>
+    <button onclick="addHomework()">➕ إضافة واجب</button>
+    <button onclick="viewHomework()">📂 الاطلاع</button>
+    <div id="homeworkList"></div>
+</div>
+
+<!-- الأساتذة -->
+<div id="teachers" class="section">
+    <h2>الأساتذة</h2>
+    <button onclick="addTeacher()">➕ إضافة أستاذ</button>
+    <button onclick="viewTeachers()">📂 الاطلاع</button>
+    <div id="teacherList"></div>
 </div>
 
 <script>
-function showSection(sectionId) {
-  let sections = document.querySelectorAll('.section');
-  sections.forEach(sec => sec.style.display = 'none');
-  document.getElementById(sectionId).style.display = 'block';
+function showSection(id){
+    document.querySelectorAll('.section').forEach(sec=>sec.style.display='none');
+    document.getElementById(id).style.display='block';
 }
 
-function calculateAverage() {
-  let m1 = parseFloat(document.getElementById("mark1").value) || 0;
-  let m2 = parseFloat(document.getElementById("mark2").value) || 0;
-  let m3 = parseFloat(document.getElementById("mark3").value) || 0;
+function calculateGrades(){
+    let data = [
+        ['m1','m2','m3','c1'],
+        ['p1','p2','p3','c2'],
+        ['s1','s2','s3','c3'],
+        ['a1','a2','a3','c4']
+    ];
 
-  let avg = (m1 + m2 + m3) / 3;
-  document.getElementById("result").innerText = "المعدل: " + avg.toFixed(2);
+    let total = 0;
+    let coefTotal = 0;
+
+    data.forEach(row=>{
+        let continuous = parseFloat(document.getElementById(row[0]).value)||0;
+        let test = parseFloat(document.getElementById(row[1]).value)||0;
+        let exam = (parseFloat(document.getElementById(row[2]).value)||0)/2;
+        let coef = parseFloat(document.getElementById(row[3]).value)||1;
+
+        let subjectAverage = (continuous + test + exam)/3;
+        total += subjectAverage * coef;
+        coefTotal += coef;
+    });
+
+    let semesterAverage = total / coefTotal;
+    document.getElementById("gradeResult").innerHTML = "المعدل الفصلي: " + semesterAverage.toFixed(2);
+}
+
+let lessons = [];
+let homeworks = [];
+let teachers = [];
+
+function addLesson(){
+    let name = prompt("اسم الدرس:");
+    if(name) lessons.push(name);
+}
+function viewLessons(){
+    let html = lessons.map(l=>`<div class="item-box">${l}</div>`).join('');
+    document.getElementById("lessonList").innerHTML = html;
+}
+
+function addHomework(){
+    let name = prompt("اسم الواجب:");
+    if(name) homeworks.push(name);
+}
+function viewHomework(){
+    let html = homeworks.map(h=>`<div class="item-box">${h}</div>`).join('');
+    document.getElementById("homeworkList").innerHTML = html;
+}
+
+function addTeacher(){
+    let name = prompt("اسم الأستاذ:");
+    if(name) teachers.push(name);
+}
+function viewTeachers(){
+    let html = teachers.map(t=>`<div class="item-box">${t}</div>`).join('');
+    document.getElementById("teacherList").innerHTML = html;
 }
 </script>
 
