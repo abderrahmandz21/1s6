@@ -2,291 +2,204 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قسم 1 علمي 6</title>
+<title>2MT1</title>
 
 <style>
-body{
-    margin:0;
-    font-family:Arial;
-    direction:rtl;
-    background:#f0f4f8;
-    text-align:center;
+body {
+    font-family: Arial;
+    background: black;
+    color: white;
+    text-align: center;
 }
-header{
-    background:#004080;
-    color:white;
-    padding:20px;
+h1 {
+    font-size: 40px;
+    font-weight: bold;
 }
-.container{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:20px;
-    margin:30px;
+button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
 }
-.card{
-    width:220px;
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.15);
-    cursor:pointer;
-}
-.section{
-    display:none;
-    width:85%;
-    margin:20px auto;
-    background:white;
-    padding:20px;
-    border-radius:15px;
-}
-button{
-    padding:10px;
-    margin:5px;
-    background:#004080;
-    color:white;
-    border:none;
-    border-radius:8px;
-}
-input,select{
-    padding:6px;
-}
-.item-box{
-    background:#eef3ff;
-    margin:10px;
-    padding:10px;
-    border-radius:8px;
-}
-img{
-    max-width:100px;
-    display:block;
-    margin:auto;
+.section {
+    display: none;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>موقع قسم 1 علمي 6</h1>
-</header>
+<script>
+// 🔒 PASSWORD
+let pass = prompt("ادخل كلمة السر:");
+if(pass !== "jsar"){
+    alert("كلمة السر خاطئة");
+    document.body.innerHTML = "";
+}
+</script>
 
-<div class="container">
-<div class="card" onclick="showSection('grades')">📊 حساب المعدل</div>
-<div class="card" onclick="showSection('lessons')">📚 الدروس</div>
-<div class="card" onclick="showSection('homework')">📝 الواجبات</div>
-<div class="card" onclick="showSection('teachers')">👨‍🏫 الأساتذة</div>
+<h1>2MT1</h1>
+
+<button onclick="show('teachers')">الاساتذة</button>
+<button onclick="show('students')">التلاميذ</button>
+<button onclick="show('grades')">المعدلات</button>
+<button onclick="show('calc')">حساب المعدل</button>
+<button onclick="show('lessons')">الدروس</button>
+
+<!-- 🔵 TEACHERS -->
+<div id="teachers" class="section">
+<h2>الاساتذة</h2>
+<button onclick="addTeacher()">اضافة استاذ</button>
+<div id="teacherList"></div>
 </div>
 
-<!-- المعدل -->
+<!-- 🔵 STUDENTS -->
+<div id="students" class="section">
+<h2>التلاميذ</h2>
+<button onclick="addStudent()">اضافة تلميذ</button>
+<div id="studentList"></div>
+</div>
+
+<!-- 🔵 GRADES -->
 <div id="grades" class="section">
+<h2>المعدلات</h2>
+<div id="gradesList"></div>
+</div>
+
+<!-- 🔵 CALCULATOR -->
+<div id="calc" class="section">
 <h2>حساب المعدل</h2>
 
-<div id="subjects"></div>
+<input id="c" placeholder="التقويم /20"><br>
+<input id="d" placeholder="الفرض /20"><br>
+<input id="e" placeholder="الاختبار /20"><br>
+<input id="coef" placeholder="المعامل"><br>
 
-<button onclick="calculate()">احسب</button>
-<button onclick="saveGrades()">💾 حفظ</button>
-<h3 id="result"></h3>
+<button onclick="calc()">احسب</button>
+<p id="result"></p>
+
 </div>
 
-<!-- الدروس -->
+<!-- 🔵 LESSONS -->
 <div id="lessons" class="section">
 <h2>الدروس</h2>
-<button onclick="addLesson()">➕ إضافة</button>
+<input id="lessonName" placeholder="اسم الدرس"><br>
+<input type="file" id="lessonImg"><br>
+<button onclick="addLesson()">اضافة درس</button>
+
 <div id="lessonList"></div>
-</div>
-
-<!-- الواجبات -->
-<div id="homework" class="section">
-<h2>الواجبات</h2>
-<button onclick="addHomework()">➕ إضافة</button>
-<div id="homeworkList"></div>
-</div>
-
-<!-- الأساتذة -->
-<div id="teachers" class="section">
-<h2>الأساتذة</h2>
-<button onclick="addTeacher()">➕ إضافة</button>
-<div id="teacherList"></div>
 </div>
 
 <script>
 
-const subjects = [
-"الرياضيات","الفيزياء","العلوم","المعلوماتية","التكنولوجيا",
-"اللغة العربية","اللغة الفرنسية","اللغة الانجليزية",
-"التربية البدنية","التاريخ والجغرافيا","التربية الاسلامية"
-];
-
-function showSection(id){
-document.querySelectorAll('.section').forEach(s=>s.style.display="none");
-document.getElementById(id).style.display="block";
+// 🔄 NAVIGATION
+function show(id){
+    document.querySelectorAll('.section').forEach(s => s.style.display="none");
+    document.getElementById(id).style.display="block";
 }
 
-/* ---------- المعدل ---------- */
-
-function loadSubjects(){
-let html="";
-subjects.forEach((s,i)=>{
-html+=`
-<div>
-<b>${s}</b><br>
-تقويم <input id="c${i}">
-فرض <input id="f${i}">
-اختبار /40 <input id="e${i}">
-معامل <input id="k${i}">
-</div><hr>`;
-});
-document.getElementById("subjects").innerHTML=html;
+// 💾 STORAGE
+function save(key,data){
+    localStorage.setItem(key, JSON.stringify(data));
+}
+function load(key){
+    return JSON.parse(localStorage.getItem(key)) || [];
 }
 
-function calculate(){
-let total=0,coef=0;
-
-subjects.forEach((s,i)=>{
-let c=+document.getElementById("c"+i).value||0;
-let f=+document.getElementById("f"+i).value||0;
-let e=(+document.getElementById("e"+i).value||0)/2;
-let k=+document.getElementById("k"+i).value||1;
-
-let avg=(c+f+e)/3;
-total+=avg*k;
-coef+=k;
-});
-
-document.getElementById("result").innerText="المعدل: "+(total/coef).toFixed(2);
-}
-
-function saveGrades(){
-let data=[];
-subjects.forEach((s,i)=>{
-data.push({
-c:document.getElementById("c"+i).value,
-f:document.getElementById("f"+i).value,
-e:document.getElementById("e"+i).value,
-k:document.getElementById("k"+i).value
-});
-});
-localStorage.setItem("grades",JSON.stringify(data));
-alert("تم الحفظ");
-}
-
-function loadGrades(){
-let data=JSON.parse(localStorage.getItem("grades")||"[]");
-data.forEach((d,i)=>{
-document.getElementById("c"+i).value=d.c||"";
-document.getElementById("f"+i).value=d.f||"";
-document.getElementById("e"+i).value=d.e||"";
-document.getElementById("k"+i).value=d.k||"";
-});
-}
-
-/* ---------- الدروس + الصور ---------- */
-
-let lessons=JSON.parse(localStorage.getItem("lessons")||"[]");
-
-function addLesson(){
-let name=prompt("اسم الدرس:");
-let fileInput=document.createElement("input");
-fileInput.type="file";
-
-fileInput.onchange=()=>{
-let reader=new FileReader();
-reader.onload=function(){
-lessons.push({name,img:reader.result});
-localStorage.setItem("lessons",JSON.stringify(lessons));
-viewLessons();
-};
-reader.readAsDataURL(fileInput.files[0]);
-};
-
-fileInput.click();
-}
-
-function viewLessons(){
-let html=lessons.map(l=>`
-<div class="item-box">
-${l.name}
-<img src="${l.img}">
-</div>`).join("");
-document.getElementById("lessonList").innerHTML=html;
-}
-
-/* ---------- الواجبات ---------- */
-
-let homeworks=JSON.parse(localStorage.getItem("homeworks")||"[]");
-
-function addHomework(){
-let name=prompt("اسم الواجب:");
-let fileInput=document.createElement("input");
-fileInput.type="file";
-
-fileInput.onchange=()=>{
-let reader=new FileReader();
-reader.onload=function(){
-homeworks.push({name,img:reader.result});
-localStorage.setItem("homeworks",JSON.stringify(homeworks));
-viewHomework();
-};
-reader.readAsDataURL(fileInput.files[0]);
-};
-
-fileInput.click();
-}
-
-function viewHomework(){
-let html=homeworks.map(h=>`
-<div class="item-box">
-${h.name}
-<img src="${h.img}">
-</div>`).join("");
-document.getElementById("homeworkList").innerHTML=html;
-}
-
-/* ---------- الأساتذة ---------- */
-
-let teachers=JSON.parse(localStorage.getItem("teachers")||"[]");
-
+// 👨‍🏫 TEACHERS
 function addTeacher(){
-let name=prompt("اسم الأستاذ:");
-let subject=prompt("المادة:");
+    let name = prompt("اسم الاستاذ");
+    let subject = prompt("المادة");
+    let teachers = load("teachers");
 
-if(name && subject){
-teachers.push({name,subject});
-localStorage.setItem("teachers",JSON.stringify(teachers));
-viewTeachers();
+    teachers.push({name,subject});
+    save("teachers",teachers);
+    displayTeachers();
 }
+
+function displayTeachers(){
+    let teachers = load("teachers");
+    let html="";
+    teachers.forEach((t,i)=>{
+        html+=`<p>${t.name} - ${t.subject}
+        <button onclick="editTeacher(${i})">تعديل</button></p>`;
+    });
+    document.getElementById("teacherList").innerHTML=html;
 }
 
 function editTeacher(i){
-let name=prompt("اسم جديد:",teachers[i].name);
-let subject=prompt("مادة:",teachers[i].subject);
-
-teachers[i]={name,subject};
-localStorage.setItem("teachers",JSON.stringify(teachers));
-viewTeachers();
+    let teachers = load("teachers");
+    teachers[i].name = prompt("اسم جديد");
+    teachers[i].subject = prompt("مادة جديدة");
+    save("teachers",teachers);
+    displayTeachers();
 }
 
-function viewTeachers(){
-let html=teachers.map((t,i)=>`
-<div class="item-box">
-${t.name} - ${t.subject}
-<br>
-<button onclick="editTeacher(${i})">✏️ تعديل</button>
-</div>`).join("");
+// 👨‍🎓 STUDENTS
+function addStudent(){
+    let name = prompt("الاسم");
+    let gmail = prompt("gmail");
+    let phone = prompt("الهاتف (اختياري)");
+    let meta = prompt("حساب meta");
 
-document.getElementById("teacherList").innerHTML=html;
+    let students = load("students");
+    students.push({name,gmail,phone,meta});
+    save("students",students);
+    displayStudents();
 }
 
-/* ---------- تشغيل ---------- */
+function displayStudents(){
+    let students = load("students");
+    let html="";
+    students.forEach(s=>{
+        html+=`<p>${s.name} - ${s.gmail}</p>`;
+    });
+    document.getElementById("studentList").innerHTML=html;
+}
 
-loadSubjects();
-setTimeout(loadGrades,100);
+// 📊 CALC
+function calc(){
+    let c = parseFloat(document.getElementById("c").value);
+    let d = parseFloat(document.getElementById("d").value);
+    let e = parseFloat(document.getElementById("e").value);
+    let coef = parseFloat(document.getElementById("coef").value);
 
-viewLessons();
-viewHomework();
-viewTeachers();
+    if(c>20||d>20||e>20){
+        alert("القيم يجب ان تكون /20");
+        return;
+    }
+
+    let result = ((c + d + e) / 3) * coef;
+    document.getElementById("result").innerText = "المعدل: " + result.toFixed(2);
+}
+
+// 📚 LESSONS
+function addLesson(){
+    let name = document.getElementById("lessonName").value;
+    let file = document.getElementById("lessonImg").files[0];
+
+    let reader = new FileReader();
+    reader.onload = function(){
+        let lessons = load("lessons");
+        lessons.push({name,img:reader.result});
+        save("lessons",lessons);
+        displayLessons();
+    }
+    reader.readAsDataURL(file);
+}
+
+function displayLessons(){
+    let lessons = load("lessons");
+    let html="";
+    lessons.forEach(l=>{
+        html+=`<p>${l.name}</p><img src="${l.img}" width="200">`;
+    });
+    document.getElementById("lessonList").innerHTML=html;
+}
+
+// INIT
+displayTeachers();
+displayStudents();
+displayLessons();
 
 </script>
 
